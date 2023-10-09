@@ -20,21 +20,31 @@ document.getElementById("save-btn").addEventListener("click", function() {
 
 
 function loadFlashcards() {
-    console.log('Load Flashcards been called')
+    console.log('Load Flashcards been called');
+    const flashcardDropdown = document.getElementById('flashcard-dropdown');
+
     fetch('/api/all')
         .then((response) => response.json())
         .then((flashcards) => {
-            const questionList = document.getElementById('question-list');
             flashcards.forEach((flashcard) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = flashcard.question;
-                listItem.addEventListener('click', () => {
-                    const questionInput = document.getElementById('question-input');
-                    const answerInput = document.getElementById('answer-input');
-                    questionInput.value = flashcard.question;
-                    answerInput.value = flashcard.answer;
-                });
-                questionList.appendChild(listItem);
+                const option = document.createElement('option');
+                option.value = flashcard.flashcard_id;
+                option.textContent = `Flashcard ID: ${flashcard.flashcard_id}`;
+                flashcardDropdown.appendChild(option);
+            });
+
+            flashcardDropdown.addEventListener('change', () => {
+                const selectedFlashcardId = flashcardDropdown.value;
+                const selectedFlashcard = flashcards.find(
+                    (flashcard) => flashcard.flashcard_id === selectedFlashcardId
+                );
+            
+                if (selectedFlashcard) {
+                    tinymce.get("questionEditor").setContent(selectedFlashcard.question);
+                    tinymce.get("answerEditor").setContent(selectedFlashcard.answer);
+                } else {
+                    console.error('Selected flashcard not found.');
+                }
             });
         })
         .catch((error) => {
@@ -45,7 +55,7 @@ function loadFlashcards() {
 loadFlashcards();
 
 document.getElementById("delete-btn").addEventListener("click", function() {
-    axios.delete("/api/flashcards/flashcardId")
+    axios.delete("/api/flashcards/flashcard_id")
         .then(response => {
             console.log("Flashcard deleted:", response.data);
         })

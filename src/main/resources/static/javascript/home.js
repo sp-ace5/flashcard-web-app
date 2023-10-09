@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function revealAnswer() {
-        // Show the answer by setting the "display" style property to "block"
         const flashcardDiv = flashcardContainer.querySelector('.flashcard');
         if (flashcardDiv) {
             const back = flashcardDiv.querySelector('.back');
@@ -32,14 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showNextFlashcard() {
-        currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcards.length;
-        displayFlashcard(currentFlashcardIndex);
-    }
 
-    // Fetch flashcards from the backend
+    function showNextFlashcard() {
+        const randomIndex = Math.floor(Math.random() * flashcards.length);
+        currentFlashcardIndex = randomIndex;
+        currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcards.length;
+        displayFlashcard(randomIndex);
+    }
     console.log('Fetching flashcards');
-    fetch('api/all') // Replace with the correct URL
+    fetch('api/all')
         .then((response) => response.json())
         .then((data) => {
             flashcards = data;
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching flashcards', error);
         });
 
-    // Add click event listeners to the buttons
+
     answerButton.addEventListener('click', revealAnswer);
     nextButton.addEventListener('click', showNextFlashcard);
 });

@@ -1,20 +1,19 @@
 package com.flashcard.flashcardwebapp.service;
 
-import com.flashcard.flashcardwebapp.entity.Flashcard;
-import com.flashcard.flashcardwebapp.repositories.FlashcardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.flashcard.flashcardwebapp.dto.FlashcardDto;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface FlashcardService {
-    private final FlashcardRepository flashcardRepository;
+    List<FlashcardDto> getAllFlashcardsByUserId(Long userId);
 
-    @Autowired
-    public FlashcardService(FlashcardRepository flashcardRepository) {
-        this.flashcardRepository = flashcardRepository;
-    }
+    @Transactional
+    void addFlashcard(FlashcardDto flashcardDto, Long userId);
 
-    public List<Flashcard> getAllFlashcards() {
-        return flashcardRepository.findAll();
-    }
+    @Transactional
+    void deleteFlashcardById(Long FlashcardId);
+
+    @Transactional
+    void updateFlashcardById(FlashcardDto flashcardDto);
+
 }

@@ -1,5 +1,7 @@
 package com.flashcard.flashcardwebapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.flashcard.flashcardwebapp.dto.FlashcardDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +22,14 @@ public class Flashcard {
     @Column(columnDefinition = "text")
     private String answer;
 
-    public void setId(Long id) {
-        this.flashcard_id = id;
+    @ManyToOne
+    @JsonBackReference
+    private User user;
+
+    public Flashcard(FlashcardDto flashcardDto) {
+        if (flashcardDto.getQuestion() != null) {
+            this.question = flashcardDto.getQuestion();
+        }
     }
 
 }
